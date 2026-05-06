@@ -21,21 +21,21 @@ public class Main {
             System.err.println("Error al procesar el grafo: " + e.getMessage());
         }
 
-        System.out.println("Grafo creado con éxito.");
+        System.out.println("Grafo creado con éxito");
 
         while (opcion !=0) {
             System.out.println("Seleccione una opción:");
-            System.out.println("1. Eliminar ciudad \n 2. Eliminar camino \n 3. Agregar camino \n 4. Calcular ruta más corta \n 5. Calcular centro \n 0. Salir");
+            System.out.println(" 1. Eliminar ciudad \n 2. Eliminar camino \n 3. Agregar camino \n 4. Calcular ruta más corta \n 5. Calcular centro \n 6. Imprimir matriz de distancias \n 0. Salir");
             opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
             switch (opcion) {
-                case 2:
+                case 1:
                     System.out.print("Ingrese el nombre de la ciudad a eliminar: ");
                     String ciudadEliminar = scanner.nextLine().strip();
                     digrafo.removeVertice(ciudadEliminar);
                     break;
                     
-                case 3:
+                case 2:
                     System.out.print("Ingrese el nombre de la primera ciudad: ");
                     String ciudad1 = scanner.nextLine().strip();
                     System.out.print("Ingrese el nombre de la segunda ciudad: ");
@@ -43,7 +43,7 @@ public class Main {
                     digrafo.removeArista(ciudad1, ciudad2);
                     break;
 
-                case 4:
+                case 3:
                     System.out.print("Ingrese el nombre de la primera ciudad: ");
                     String ciudad1Agregar = scanner.nextLine().strip();
                     System.out.print("Ingrese el nombre de la segunda ciudad: ");
@@ -54,25 +54,25 @@ public class Main {
                     digrafo.addArista(ciudad1Agregar, ciudad2Agregar, peso);
                     break;
 
-                case 5:
+                case 4:
                     System.out.print("Ingrese el nombre de la primera ciudad: ");
                     String origen = scanner.nextLine().strip();
                     System.out.print("Ingrese el nombre de la segunda ciudad: ");
                     String destino = scanner.nextLine().strip();
                     digrafo.RutaMasCorta(origen, destino);
                     break;
+                case 5:
+                    System.out.println("La ciudad central es: " + digrafo.calcularCentro());
+                    break;
                 case 6:
-                    System.out.println("La ciudad central es:");
-                    //digrafo.calcularCentro();
+                    digrafo.imprimirMatriz();
+                    break;
                 case 0:
                     System.out.println("Saliendo");
                     break;
-
                 default:
-                    throw new AssertionError();
+                    throw new AssertionError("Opción no válida");
             }
-
         }
-
     }
 }
