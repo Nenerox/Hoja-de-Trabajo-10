@@ -14,7 +14,9 @@ public class Digrafo<V, E> {
     public Digrafo(int tamaño) {
         this.tamaño = tamaño;
         this.matriz = new int[tamaño][tamaño];
+        this.matrizRutas = new int[tamaño][tamaño];
         this.verticeIndex = new HashMap<>();
+        this.contVertices = 0;
         for (int i = 0; i < tamaño; i++) {
             for (int j = 0; j < tamaño; j++) {
                 matriz[i][j] = -1;
@@ -26,15 +28,40 @@ public class Digrafo<V, E> {
     public void addVertice(V vertice){
         verticeIndex.put(vertice, contVertices);
         contVertices++;
+        if (contVertices > tamaño) {
+            int aux[][] = matriz.clone();
+            int auxRutas[][] = matrizRutas.clone();
+            matriz = new int[contVertices][contVertices];
+            for (int i = 0; i < contVertices; i++) {
+                for (int j = 0; j < contVertices; j++) {
+                    if (i >= tamaño || j >= tamaño) {
+                        matriz[i][j] = -1;
+                        matrizRutas[i][j] = -1;
+                    } else {
+                        matriz[i][j] = aux[i][j];
+                        matrizRutas[i][j] = auxRutas[i][j];
+                    }
+                }
+            }
+        }
     }
 
     public void addArista(V Vinicio, V Vfinal, E label){
+        if (!verticeIndex.containsKey(Vinicio) || !verticeIndex.containsKey(Vfinal)) {
+            System.out.println("Una o ambas ciudades no existen en el grafo.");
+            return;
+        }
         int index1 = verticeIndex.get(Vinicio);
         int index2 = verticeIndex.get(Vfinal);
         matriz[index1][index2] = (Integer) label;
+        algoritmoFloyd();
     }
 
     public void removeVertice(V vertice){
+        if (!verticeIndex.containsKey(vertice)) {
+            System.out.println("La ciudad " + vertice + " no existe en el grafo.");
+            return;
+        }
         int index = verticeIndex.get(vertice);
         for (int i = 0; i < tamaño; i++) {
             matriz[index][i] = -1; // Limpiar fila
@@ -47,10 +74,24 @@ public class Digrafo<V, E> {
     }
 
     public void removeArista(V Vinicio, V Vfinal){
+        if (!verticeIndex.containsKey(Vinicio) || !verticeIndex.containsKey(Vfinal)) {
+            System.out.println("Una o ambas ciudades no existen en el grafo.");
+            return;
+        }
         int index1 = verticeIndex.get(Vinicio);
         int index2 = verticeIndex.get(Vfinal);
         matriz[index1][index2] = -1;
         algoritmoFloyd(); // Recalcular rutas más cortas después de eliminar una arista
+    }
+
+    public void imprimirMatriz() {
+        System.out.println("Matriz de adyacencia:");
+        for (int i = 0; i < tamaño; i++) {
+            for (int j = 0; j < tamaño; j++) {
+                System.out.print(matriz[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
     private void algoritmoFloyd() {
@@ -95,8 +136,39 @@ public class Digrafo<V, E> {
         }
     }
 
-    public void calcularCentro() {
-        // Implementación para calcular el centro del grafo
+    public V calcularCentro() {
+        int indexCentro = -1;
+        int minMaxDistancia = Integer.MAX_VALUE;
+
+        for (int i = 0; i < tamaño; i++) {
+            int maxDistancia = 0;
+            boolean esValido = true;
+
+            for (int j = 0; j < tamaño; j++) {
+                if (matrizDistancias[i][j] == -1) {
+                    esValido = false; // no hay camino
+                    break;
+                }
+                if (matrizDistancias[i][j] > maxDistancia) {
+                    maxDistancia = matrizDistancias[i][j];
+                }
+            }
+            if (esValido && maxDistancia < minMaxDistancia) {
+                minMaxDistancia = maxDistancia;
+                indexCentro = i;
+            }
+        }
+
+        if (indexCentro != -1) {
+            for (Map.Entry<V, Integer> entrada : verticeIndex.entrySet()) {
+                if (entrada.getValue() == indexCentro) {
+                    return entrada.getKey();
+                }
+            }
+        }
+
+        System.out.println("No se pudo determinar el centro del grafo.");
+        return null;
     }
     
 }
