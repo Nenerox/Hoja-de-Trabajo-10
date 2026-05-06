@@ -25,15 +25,10 @@ public class Main {
 
         while (opcion !=0) {
             System.out.println("Seleccione una opción:");
-            System.out.println("1. Imprimir matriz de adyacencia \n 2. Eliminar ciudad \n 3. Eliminar camino \n 4.Agregar camino \n 5. Calcular ruta más corta \n 6. Calcular centro \n 0. Salir");
+            System.out.println("1. Eliminar ciudad \n 2. Eliminar camino \n 3. Agregar camino \n 4. Calcular ruta más corta \n 5. Calcular centro \n 0. Salir");
             opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
             switch (opcion) {
-                case 1:
-                    System.out.println("Matriz de adyacencia del digrafo:");
-                    digrafo.imprimirMatriz();
-                    break;
-
                 case 2:
                     System.out.print("Ingrese el nombre de la ciudad a eliminar: ");
                     String ciudadEliminar = scanner.nextLine().strip();
@@ -64,11 +59,11 @@ public class Main {
                     String origen = scanner.nextLine().strip();
                     System.out.print("Ingrese el nombre de la segunda ciudad: ");
                     String destino = scanner.nextLine().strip();
-                    //digrafo.Floyd(origen, destino);
+                    digrafo.RutaMasCorta(origen, destino);
                     break;
                 case 6:
                     System.out.println("La ciudad central es:");
-                    //digrafo.centro();
+                    //digrafo.calcularCentro();
                 case 0:
                     System.out.println("Saliendo");
                     break;
