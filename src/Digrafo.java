@@ -19,8 +19,13 @@ public class Digrafo<V, E> {
         this.contVertices = 0;
         for (int i = 0; i < tamaño; i++) {
             for (int j = 0; j < tamaño; j++) {
-                matriz[i][j] = -1;
-                matrizRutas[i][j] = -1;
+                if (i == j) {
+                    matriz[i][j] = 0; 
+                    matrizRutas[i][j] = -1; 
+                } else {
+                    matriz[i][j] = -1; 
+                    matrizRutas[i][j] = -1;
+                }
             }
         }
     }
@@ -55,8 +60,8 @@ public class Digrafo<V, E> {
     public void imprimirMatriz(String tipo) {
         algoritmoFloyd();
         System.out.println("Matriz de " + tipo + ":");
-        for (int i = 0; i < tamaño; i++) {
-            for (int j = 0; j < tamaño; j++) {
+        for (int i = 0; i < contVertices; i++) {
+            for (int j = 0; j < contVertices; j++) {
                 if (tipo.equalsIgnoreCase("adyacencia")) {
                     System.out.print(matriz[i][j] + " ");
                 } else if (tipo.equalsIgnoreCase("distancia")) {
@@ -68,17 +73,17 @@ public class Digrafo<V, E> {
     }
 
     private void algoritmoFloyd() {
-        matrizDistancia = new int[tamaño][tamaño];
-        for (int i = 0; i < tamaño; i++) {
-            for (int j = 0; j < tamaño; j++) {
+        matrizDistancia = new int[contVertices][contVertices];
+        for (int i = 0; i < contVertices; i++) {
+            for (int j = 0; j < contVertices; j++) {
                 matrizDistancia[i][j] = matriz[i][j];
                 matrizRutas[i][j] = -1;
             }
         }
         // Implementación del algoritmo de Floyd para calcular la ruta más corta
-        for (int k = 0; k < tamaño; k++) {
-            for (int i = 0; i < tamaño; i++) {
-                for (int j = 0; j < tamaño; j++) {
+        for (int k = 0; k < contVertices; k++) {
+            for (int i = 0; i < contVertices; i++) {
+                for (int j = 0; j < contVertices; j++) {
                     if (matrizDistancia[i][k] != -1 && matrizDistancia[k][j] != -1) {
                         int nuevaDistancia = matrizDistancia[i][k] + matrizDistancia[k][j];
                         if (matrizDistancia[i][j] == -1 || nuevaDistancia < matrizDistancia[i][j]) {
@@ -133,13 +138,13 @@ public class Digrafo<V, E> {
         int indexCentro = -1;
         int minMaxDistancia = -1;
 
-        for (int i = 0; i < tamaño; i++) {
+        for (int i = 0; i < contVertices; i++) {
             int maxDistancia = 0;
             boolean esValido = true;
 
-            for (int j = 0; j < tamaño; j++) {
+            for (int j = 0; j < contVertices; j++) {
                 if (matrizDistancia[i][j] == -1) {
-                    esValido = false; // no hay camino
+                    esValido = false;
                     break;
                 }
                 if (matrizDistancia[i][j] > maxDistancia) {
@@ -151,15 +156,12 @@ public class Digrafo<V, E> {
                 indexCentro = i;
             }
         }
+
         if (indexCentro != -1) {
-            for (Map.Entry<V, Integer> entrada : verticeIndex.entrySet()) {
-                if (entrada.getValue() == indexCentro) {
-                    return entrada.getKey();
-                }
-            }
+            return getVerticePorIndex(indexCentro);
         }
+
         System.out.println("No se pudo determinar el centro del grafo.");
         return null;
-    }
-    
+    } 
 }
