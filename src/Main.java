@@ -75,10 +75,8 @@ public class Main {
                     System.out.println(" 1. Matriz de adyacencia \n 2. Matriz de distancias");
                     int tipo = scanner.nextInt();
                     if (tipo == 1) {
-                        System.out.println("Matriz de adyacencia:");
                         digrafo.imprimirMatriz("adyacencia");
                     } else if (tipo == 2) {
-                        System.out.println("Matriz de distancias:");
                         digrafo.imprimirMatriz("distancia");
                     } else {
                         System.out.println("Opción no válida");
